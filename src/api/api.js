@@ -12,7 +12,7 @@ const api = create({
 
 function listener() {
     const authData = selectAuthData(store.getState())
-    api.requestTransforms(request => {
+    api.addRequestTransform(request => {
         if (request.method === 'GET') {
             request.headers['access-token'] = authData.accessToken
             request.headers['client'] = authData.client

@@ -1,3 +1,4 @@
+import { LoadingStatus } from "../../../utils/utils";
 import { UserActionsTypes } from "./actionTypes";
 
 
@@ -6,7 +7,8 @@ import { UserActionsTypes } from "./actionTypes";
 
 const initialState = {
     user: null,
-    authData: null
+    authData: null,
+    loadingStatus: LoadingStatus.NEVER
 }
 
 export const userReducer = (state = initialState, action) => {
@@ -17,7 +19,11 @@ export const userReducer = (state = initialState, action) => {
                 user: action.payload.user,
                 authData: action.payload.authData
             }
-    
+        case UserActionsTypes.SET_LOADING_STATUS:
+            return {
+                ...state,
+                loadingStatus: action.payload
+            }
         default:
             return state
     }

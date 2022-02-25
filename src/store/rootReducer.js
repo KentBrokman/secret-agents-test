@@ -1,4 +1,5 @@
 import { userReducer } from "./ducks/user/reducer";
+import { combineReducers } from "redux";
 
 
 
