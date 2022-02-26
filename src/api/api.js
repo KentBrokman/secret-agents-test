@@ -1,6 +1,6 @@
 
 import { create } from 'apisauce'
-import store from '../store/store'
+import {store} from '../store/store'
 import { selectAuthData } from '../store/ducks/user/selectors'
 
 // const instance = axios.create({
@@ -12,13 +12,15 @@ const api = create({
 
 function listener() {
     const authData = selectAuthData(store.getState())
-    api.addRequestTransform(request => {
-        if (request.method === 'GET') {
-            request.headers['access-token'] = authData.accessToken
-            request.headers['client'] = authData.client
-            request.headers['uid'] = authData.uid
-        }
-    })
+    if (authData) {
+        api.addRequestTransform(request => {
+            if (request.method === 'get') {
+                request.headers['access-token'] = authData.accessToken
+                request.headers['client'] = authData.client
+                request.headers['uid'] = authData.uid
+            }
+        })
+    }
 }
 store.subscribe(listener)
 
@@ -27,6 +29,9 @@ store.subscribe(listener)
 export const authApi = {
     async logIn(email, password) {
         const data = await api.post('/auth/sign_in', { email, password })
+        if (data.status === 401) {
+            throw new Error('error')
+        }
         return data
     }
 }

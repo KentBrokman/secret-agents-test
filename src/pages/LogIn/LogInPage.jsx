@@ -10,6 +10,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { getUserData } from "../../store/ducks/user/thunks";
 import { LoadingStatus } from '../../utils/utils'
 import { selectUserLoadingStatus, selectUser } from '../../store/ducks/user/selectors'
+import { setLoadingStatus } from "../../store/ducks/user/actionCreators";
 
 
 
@@ -44,6 +45,7 @@ export const LogInPage = () => {
     }
     const onButtonClick = () => {
         if (!email || !password) {
+            dispatch(setLoadingStatus(LoadingStatus.NEVER))
             setAlert(true)
         } else {
             dispatch(getUserData(email, password))
@@ -56,6 +58,11 @@ export const LogInPage = () => {
             navigate('/news')
         }
     }, [userData, navigate])
+    useEffect(() => {
+        if (userLoadingStatus === LoadingStatus.ERROR) {
+            setAlert(true)
+        }
+    }, [userLoadingStatus])
     //
     return (
         <div className={logInStyles.wrapper}>
@@ -84,9 +91,9 @@ export const LogInPage = () => {
                     </>
                 }
             </div>
-            <Snackbar open={alert} autoHideDuration={6000} onClose={handleCloseAlert} anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}>
+            <Snackbar open={alert} autoHideDuration={4000} onClose={handleCloseAlert} anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}>
                 <MuiAlert onClose={handleCloseAlert} severity="warning" sx={{ width: '100%' }}>
-                    Введите email и пароль!
+                    {userLoadingStatus === LoadingStatus.ERROR ? 'Неверный email или пароль!' : 'Введите email и пароль!'}
                 </MuiAlert>
             </Snackbar>
         </div>
