@@ -4,7 +4,7 @@ import { useNewsStyles } from './News_styles'
 
 import CircularProgress from '@mui/material/CircularProgress';
 import { Paginator } from "../Paginator/Paginator";
-import { newsApi } from "../../../../api/api";
+import api, { newsApi } from "../../../../api/api";
 import { useSelector } from "react-redux";
 import { selectAuthData } from "../../../../store/ducks/user/selectors";
 
@@ -31,7 +31,7 @@ export const News = () => {
     useEffect(() => {
         if (authData) {
             async function fetchData() {
-                const data = await newsApi.fetchNews()
+                const { data } = await api.get('/news')
                 setNews(data.news)
             }
             fetchData()
@@ -58,7 +58,7 @@ export const News = () => {
                                 <div className={newsStyles.newsCard}>
                                     <div className={newsStyles.newsCard__img} style={{ backgroundImage: `url(${item.image_url})` }}></div>
                                     <h6 className={newsStyles.newsCard__title}>{item.title}</h6>
-                                    <span className={newsStyles.newsCard__info}>{item.short_text}</span>
+                                    <span className={newsStyles.newsCard__info} dangerouslySetInnerHTML={{__html: item.short_text}} />
                                 </div>
                             </Link>
                         )

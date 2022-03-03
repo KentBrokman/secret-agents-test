@@ -1,5 +1,5 @@
 
-import { authApi } from "../../../api/api"
+import api, { authApi } from "../../../api/api"
 import { LoadingStatus } from "../../../utils/utils"
 import { setLoadingStatus, setUserData } from "./actionCreators"
 
@@ -8,7 +8,10 @@ export const getUserData = (email, password) => {
     return async (dispatch) => {
         try {
             dispatch(setLoadingStatus(LoadingStatus.LOADING))
-            const data = await authApi.logIn(email, password)
+            const data = await api.post('/auth/sign_in', { email, password })
+            if (data.status === 401) {
+                throw new Error('error')
+            }
             dispatch(setUserData({
                 user: data.data.user,
                 authData: {

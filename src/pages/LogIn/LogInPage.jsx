@@ -81,6 +81,7 @@ export const LogInPage = () => {
                                 onChange={onEmailChange}
                             />
                             <TextField
+                                type='password'
                                 label="Пароль"
                                 variant="outlined"
                                 onChange={onPasswordChange}

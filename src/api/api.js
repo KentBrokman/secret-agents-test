@@ -1,6 +1,6 @@
 
 import { create } from 'apisauce'
-import {store} from '../store/store'
+import { store } from '../store/store'
 import { selectAuthData } from '../store/ducks/user/selectors'
 
 // const instance = axios.create({
@@ -14,35 +14,33 @@ function listener() {
     const authData = selectAuthData(store.getState())
     if (authData) {
         api.addRequestTransform(request => {
-            if (request.method === 'get') {
-                request.headers['access-token'] = authData.accessToken
-                request.headers['client'] = authData.client
-                request.headers['uid'] = authData.uid
-            }
+            request.headers['access-token'] = authData.accessToken
+            request.headers['client'] = authData.client
+            request.headers['uid'] = authData.uid
         })
     }
 }
 store.subscribe(listener)
 
+export default api
 
+// export const authApi = {
+//     async logIn(email, password) {
+//         const data = await api.post('/auth/sign_in', { email, password })
+//         if (data.status === 401) {
+//             throw new Error('error')
+//         }
+//         return data
+//     }
+// }
 
-export const authApi = {
-    async logIn(email, password) {
-        const data = await api.post('/auth/sign_in', { email, password })
-        if (data.status === 401) {
-            throw new Error('error')
-        }
-        return data
-    }
-}
-
-export const newsApi = {
-    async fetchNews() {
-        const { data } = await api.get('/news')
-        return data
-    },
-    async fetchNewsItem(id) {
-        const { data } = await api.get(`/news/${id}`)
-        return data
-    }
-}
+// export const newsApi = {
+//     async fetchNews() {
+//         const { data } = await api.get('/news')
+//         return data
+//     },
+//     async fetchNewsItem(id) {
+//         const { data } = await api.get(`/news/${id}`)
+//         return data
+//     }
+// }

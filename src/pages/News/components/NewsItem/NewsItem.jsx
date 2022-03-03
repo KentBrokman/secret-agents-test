@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react"
 import { useParams } from "react-router-dom"
 import { useNewsItemStyles } from "./NewsItem_styles"
-import { newsApi } from '../../../../api/api'
+import api, { newsApi } from '../../../../api/api'
 
 import CircularProgress from '@mui/material/CircularProgress';
 
@@ -18,7 +18,7 @@ export const NewsItem = () => {
     // life cycle methods
     useEffect(() => {
         async function fetchData() {
-            const data = await newsApi.fetchNewsItem(newsItemId)
+            const { data } = await api.get(`/news/${newsItemId}`)
             setNewsItem(data.news)
         }
         fetchData()
@@ -30,7 +30,7 @@ export const NewsItem = () => {
                 <>
                     <img src={newsItem.image_url} alt='newsImg' />
                     <h3>{newsItem.title}</h3>
-                    <p>{newsItem.body}</p>
+                    <div dangerouslySetInnerHTML={{__html: newsItem.body}} />
                 </> :
                 <div className={newsItemStyles.loader}>
                     <CircularProgress />
